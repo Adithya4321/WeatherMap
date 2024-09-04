@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .heading {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .item {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading">Weather Details for {{ weather_data.name }}</h1>
+        {% if 'error' in weather_data %}
+            <p>{{ weather_data.error }}</p>
+        {% else %}
+            <div class="grid">
+                <div class="item">Temperature: {{ weather_data.main.temp }} °C</div>
+                <div class="item">Feels Like: {{ weather_data.main.feels_like }} °C</div>
+                <div class="item">Minimum Temperature: {{ weather_data.main.temp_min }} °C</div>
+                <div class="item">Maximum Temperature: {{ weather_data.main.temp_max }} °C</div>
+                <div class="item">Pressure: {{ weather_data.main.pressure }} hPa</div>
+                <div class="item">Humidity: {{ weather_data.main.humidity }} %</div>
+                <div class="item">Visibility: {{ weather_data.visibility }} meters</div>
+                <div class="item">Wind Speed: {{ weather_data.wind.speed }} m/s</div>
+                <div class="item">Wind Direction: {{ weather_data.wind.deg }}°</div>
+                <div class="item">Cloudiness: {{ weather_data.clouds.all }} %</div>
+                <div class="item">Sunrise: {{ weather_data.sys.sunrise | datetimeformat(weather_data.timezone) }}</div>
+                <div class="item">Sunset: {{ weather_data.sys.sunset | datetimeformat(weather_data.timezone) }}</div>
+                <div class="item">Current Time: {{ weather_data.dt | datetimeformat(weather_data.timezone) }}</div>
+                <div class="item">Time Until Sunrise: {{ weather_data.time_until_sunrise | timedelta }}</div>
+                <div class="item">Time Until Sunset: {{ weather_data.time_until_sunset | timedelta }}</div>
+                {% if 'rain' in weather_data %}
+                    <div class="item">Rain Volume (last 1 hour): {{ weather_data.rain['1h'] }} mm</div>
+                {% endif %}
+                {% if 'snow' in weather_data %}
+                    <div class="item">Snow Volume (last 1 hour): {{ weather_data.snow['1h'] }} mm</div>
+                {% endif %}
+                <div class="item">Weather Condition: {{ weather_data.weather[0].description }}</div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
